@@ -2,9 +2,9 @@
 
 ![Python](https://img.shields.io/badge/Python-3.13+-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![GitHub stars](https://img.shields.io/github/stars/<YASASHWI70>/<InsightDrop-Analysis>?style=social)
-![GitHub forks](https://img.shields.io/github/forks/<YASASHWI70>/<InsightDrop-Analysis>?style=social)
-![License](https://img.shields.io/github/license/<YASASHWI70>/<InsightDrop-Analysis>)
+![GitHub stars](https://img.shields.io/github/stars/YASASHWI70/InsightDrop-Analysis?style=social)
+![GitHub forks](https://img.shields.io/github/forks/YASASHWI70/InsightDrop-Analysis?style=social)
+![License](https://img.shields.io/github/license/YASASHWI70/InsightDrop-Analysis)
 
 InsightDrop is a fast, intelligent web application that automatically performs Exploratory Data Analysis (EDA) on any dataset you provide. Simply drag and drop a CSV or Excel file, and get instant, comprehensive insights without writing a single line of code.
 
