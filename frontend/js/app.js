@@ -167,7 +167,17 @@ function renderOverview(profile) {
     `;
 
     const el = document.getElementById('column-types-card');
-    el.innerHTML = `<p class="card-title">Column Types</p><div id="dtype-chart"></div>`;
+    el.innerHTML = `
+        <div class="card-title-row">
+            <p class="card-title">Column Types</p>
+            <div class="dtype-legend" aria-label="Column type colors">
+                <span><i style="background:#247a76"></i>Numeric</span>
+                <span><i style="background:#5c6f86"></i>Categorical</span>
+                <span><i style="background:#ad6a00"></i>Datetime</span>
+            </div>
+        </div>
+        <div id="dtype-chart"></div>
+    `;
     const cats = {
         numeric: overview.numeric_columns,
         categorical: overview.categorical_columns,
@@ -183,18 +193,9 @@ function renderOverview(profile) {
         hoverinfo: 'label+value+percent',
         sort: false,
     }], {
-        ...plotlyLayout(240),
-        showlegend: true,
-        margin: { l: 8, r: 8, t: 4, b: 52 },
-        legend: {
-            orientation: 'h',
-            x: 0.5,
-            xanchor: 'center',
-            y: -0.08,
-            yanchor: 'top',
-            font: { color: '#435063', family: 'Inter', size: 11 },
-            itemwidth: 86,
-        },
+        ...plotlyLayout(250),
+        showlegend: false,
+        margin: { l: 8, r: 8, t: 4, b: 4 },
     }, { responsive: true, displayModeBar: false });
 
     const cols = profile.columns;
