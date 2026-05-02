@@ -1,5 +1,5 @@
 """
-Visualization Generator — Produces chart-ready data for Plotly.js rendering.
+Visualization Generator - Produces chart-ready data for Plotly.js rendering.
 """
 
 import pandas as pd
@@ -34,7 +34,7 @@ class VisualizationGenerator:
                 "id": f"hist_{col}", "type": "histogram",
                 "title": f"Distribution of {col}",
                 "data": [{"x": [self._s(v) for v in s.tolist()], "type": "histogram",
-                          "marker": {"color": "rgba(99, 102, 241, 0.7)"}, "name": col}],
+                          "marker": {"color": "rgba(14, 124, 123, 0.72)"}, "name": col}],
                 "layout": {"xaxis": {"title": col}, "yaxis": {"title": "Count"}},
             })
         return charts
@@ -44,12 +44,12 @@ class VisualizationGenerator:
             return []
         cols = list(self.numeric_df.columns[:8])
         data = []
-        colors = ["#6366f1","#8b5cf6","#a78bfa","#c4b5fd","#818cf8","#6d28d9","#7c3aed","#4f46e5"]
+        colors = ["#0e7c7b", "#3759d7", "#b76a00", "#7047b8", "#16855c", "#c93434", "#435063", "#748094"]
         for i, col in enumerate(cols):
             s = self.numeric_df[col].dropna()
             data.append({"y": [self._s(v) for v in s.tolist()], "type": "box",
                          "name": col, "marker": {"color": colors[i % len(colors)]}})
-        return [{"id": "boxplots", "type": "box", "title": "Box Plots — Numeric Columns",
+        return [{"id": "boxplots", "type": "box", "title": "Box Plots - Numeric Columns",
                  "data": data, "layout": {"yaxis": {"title": "Values"}}}]
 
     def _bar_charts(self) -> list[dict]:
@@ -58,10 +58,10 @@ class VisualizationGenerator:
             vc = self.df[col].value_counts().head(15)
             charts.append({
                 "id": f"bar_{col}", "type": "bar",
-                "title": f"Top Values — {col}",
+                "title": f"Top Values - {col}",
                 "data": [{"x": [str(v) for v in vc.index.tolist()],
                           "y": [int(v) for v in vc.values.tolist()],
-                          "type": "bar", "marker": {"color": "rgba(139, 92, 246, 0.8)"}}],
+                          "type": "bar", "marker": {"color": "rgba(55, 89, 215, 0.78)"}}],
                 "layout": {"xaxis": {"title": col}, "yaxis": {"title": "Count"}},
             })
         return charts
@@ -97,7 +97,7 @@ class VisualizationGenerator:
                 "data": [{"x": [self._s(v) for v in s1.loc[idx].head(500).tolist()],
                           "y": [self._s(v) for v in s2.loc[idx].head(500).tolist()],
                           "mode": "markers", "type": "scatter",
-                          "marker": {"color": "rgba(99,102,241,0.5)", "size": 5}}],
+                          "marker": {"color": "rgba(14,124,123,0.55)", "size": 6}}],
                 "layout": {"xaxis": {"title": c1}, "yaxis": {"title": c2}},
             })
         return charts
@@ -107,12 +107,12 @@ class VisualizationGenerator:
         missing = missing[missing > 0].sort_values(ascending=True)
         if len(missing) == 0:
             return {"id": "missing", "type": "info", "title": "Missing Values",
-                    "message": "No missing values found! ✅"}
+                    "message": "No missing values found."}
         return {
             "id": "missing", "type": "bar", "title": "Missing Values by Column",
             "data": [{"x": [int(v) for v in missing.values.tolist()],
                       "y": list(missing.index), "type": "bar", "orientation": "h",
-                      "marker": {"color": "rgba(239, 68, 68, 0.7)"}}],
+                      "marker": {"color": "rgba(201, 52, 52, 0.72)"}}],
             "layout": {"xaxis": {"title": "Missing Count"}, "margin": {"l": 150}},
         }
 
@@ -122,7 +122,7 @@ class VisualizationGenerator:
             "id": "dtypes", "type": "pie", "title": "Data Types Distribution",
             "data": [{"values": [int(v) for v in counts.values.tolist()],
                       "labels": list(counts.index), "type": "pie",
-                      "marker": {"colors": ["#6366f1","#8b5cf6","#ec4899","#f59e0b","#10b981"]}}],
+                      "marker": {"colors": ["#0e7c7b", "#3759d7", "#b76a00", "#7047b8", "#16855c"]}}],
             "layout": {},
         }
 

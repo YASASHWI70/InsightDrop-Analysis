@@ -1,9 +1,8 @@
 """
-InsightDrop — FastAPI Backend
+InsightDrop - FastAPI Backend
 Provides automatic data analysis for any uploaded CSV/Excel dataset.
 """
 
-import os
 import uuid
 import shutil
 from pathlib import Path
@@ -14,17 +13,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from analyzers import (
-    DataProfiler,
-    StatisticsAnalyzer,
-    CorrelationAnalyzer,
-    OutlierDetector,
-    VisualizationGenerator,
-)
+try:
+    from .analyzers import (
+        DataProfiler,
+        StatisticsAnalyzer,
+        CorrelationAnalyzer,
+        OutlierDetector,
+        VisualizationGenerator,
+    )
+except ImportError:
+    from analyzers import (
+        DataProfiler,
+        StatisticsAnalyzer,
+        CorrelationAnalyzer,
+        OutlierDetector,
+        VisualizationGenerator,
+    )
 
 app = FastAPI(title="InsightDrop", version="1.0.0")
 
-# CORS — allow frontend to call API
+# CORS - allow frontend to call API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,13 +41,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Storage for uploaded datasets (in-memory for MVP)
-UPLOAD_DIR = Path("uploads")
+# Project paths are anchored to the repository root so the app can be run
+# from either the root directory or the backend directory.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+UPLOAD_DIR = PROJECT_ROOT / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 datasets: dict[str, dict] = {}
 
 # Serve frontend
-FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
 if FRONTEND_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
@@ -167,4 +177,5 @@ def _load_dataset(dataset_id: str) -> pd.DataFrame:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    app_path = "backend.main:app" if __package__ else "main:app"
+    uvicorn.run(app_path, host="0.0.0.0", port=8000, reload=True)
