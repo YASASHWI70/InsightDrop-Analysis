@@ -1,5 +1,10 @@
 # InsightDrop - Automated Data Analysis
 
+![Python](https://img.shields.io/badge/Python-3.13+-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Backend](https://img.shields.io/badge/Backend-FastAPI-red)
+![Frontend](https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-orange)
+
 InsightDrop is a fast, intelligent web application that automatically performs Exploratory Data Analysis (EDA) on any dataset you provide. Simply drag and drop a CSV or Excel file, and get instant, comprehensive insights without writing a single line of code.
 
 ##  Features
