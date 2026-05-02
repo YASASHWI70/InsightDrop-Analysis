@@ -58,7 +58,7 @@ InsightDrop is a fast, intelligent web application that automatically performs E
 2. Start the FastAPI server from the `backend` directory:
    ```bash
    cd backend
-   python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+   python -m uvicorn main:app 
    ```
 3. Open your web browser and navigate to: [http://localhost:8000](http://localhost:8000)
 
@@ -89,6 +89,5 @@ auto-data/
 
 A `sample_employees.csv` file is included in the project root. You can drag and drop this file into the web interface to instantly see the analyzer in action!
 
-##  License
-
-This project is open-source and available under the MIT License.
+## License
+This project is licensed under the MIT License.
