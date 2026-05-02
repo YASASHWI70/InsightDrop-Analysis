@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightDrop — Instant Dataset Insights</title>
+    <meta name="description" content="Upload any CSV or Excel file and get automatic data profiling, statistics, correlation analysis, outlier detection, and interactive visualizations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Background Glow Effects -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <h1>InsightDrop<span class="accent">.</span></h1>
+            </div>
+            <p class="tagline">Instant AI-Powered Dataset Analysis</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+        <!-- Upload Section -->
+        <section id="upload-section" class="section visible">
+            <div class="upload-container">
+                <div id="drop-zone" class="drop-zone">
+                    <div class="drop-zone-content">
+                        <div class="upload-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <h2>Drop your dataset here</h2>
+                        <p>or click to browse — supports <strong>CSV</strong> and <strong>Excel</strong> files</p>
+                        <input type="file" id="file-input" accept=".csv,.xlsx,.xls" hidden>
+                        <button id="browse-btn" class="btn btn-primary">
+                            <span>Choose File</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="upload-progress" class="upload-progress hidden">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                    <p class="progress-text">Uploading & analyzing...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Dashboard -->
+        <section id="results-section" class="section hidden">
+            <!-- File Info Bar -->
+            <div id="file-info-bar" class="file-info-bar">
+                <div class="file-info-left">
+                    <span class="file-icon">📄</span>
+                    <span id="file-name" class="file-name">dataset.csv</span>
+                    <span id="file-meta" class="file-meta">— rows × cols</span>
+                </div>
+                <button id="new-upload-btn" class="btn btn-outline btn-sm">Upload New File</button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <nav id="tab-nav" class="tab-nav">
+                <button class="tab active" data-tab="overview">Overview</button>
+                <button class="tab" data-tab="statistics">Statistics</button>
+                <button class="tab" data-tab="correlations">Correlations</button>
+                <button class="tab" data-tab="outliers">Outliers</button>
+                <button class="tab" data-tab="visualizations">Charts</button>
+                <button class="tab" data-tab="data-preview">Data</button>
+            </nav>
+
+            <!-- Tab Panels -->
+            <div id="tab-panels" class="tab-panels">
+                <!-- Overview -->
+                <div id="panel-overview" class="panel active">
+                    <div class="grid grid-4" id="overview-cards"></div>
+                    <div class="grid grid-2 mt-2">
+                        <div class="card" id="quality-card"></div>
+                        <div class="card" id="column-types-card"></div>
+                    </div>
+                    <div class="card mt-2" id="columns-table-card"></div>
+                </div>
+
+                <!-- Statistics -->
+                <div id="panel-statistics" class="panel">
+                    <div id="stats-overall" class="grid grid-3 mb-2"></div>
+                    <div class="card" id="stats-table-card"></div>
+                </div>
+
+                <!-- Correlations -->
+                <div id="panel-correlations" class="panel">
+                    <div class="card" id="corr-heatmap-card"></div>
+                    <div class="grid grid-2 mt-2">
+                        <div class="card" id="corr-strong-card"></div>
+                        <div class="card" id="corr-top-card"></div>
+                    </div>
+                </div>
+
+                <!-- Outliers -->
+                <div id="panel-outliers" class="panel">
+                    <div class="grid grid-3" id="outlier-summary-cards"></div>
+                    <div class="card mt-2" id="outlier-table-card"></div>
+                </div>
+
+                <!-- Visualizations -->
+                <div id="panel-visualizations" class="panel">
+                    <div id="charts-container" class="charts-grid"></div>
+                </div>
+
+                <!-- Data Preview -->
+                <div id="panel-data-preview" class="panel">
+                    <div class="card" id="data-table-card"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <p>Analyzing your dataset...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
