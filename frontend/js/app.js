@@ -167,7 +167,17 @@ function renderOverview(profile) {
     `;
 
     const el = document.getElementById('column-types-card');
-    el.innerHTML = `<p class="card-title">Column Types</p><div id="dtype-chart" style="height:210px"></div>`;
+    el.innerHTML = `
+        <div class="card-title-row">
+            <p class="card-title">Column Types</p>
+            <div class="dtype-legend" aria-label="Column type colors">
+                <span><i style="background:#247a76"></i>Numeric</span>
+                <span><i style="background:#5c6f86"></i>Categorical</span>
+                <span><i style="background:#ad6a00"></i>Datetime</span>
+            </div>
+        </div>
+        <div id="dtype-chart"></div>
+    `;
     const cats = {
         numeric: overview.numeric_columns,
         categorical: overview.categorical_columns,
@@ -178,10 +188,15 @@ function renderOverview(profile) {
         labels: Object.keys(cats),
         type: 'pie',
         hole: 0.58,
-        marker: { colors: ['#0e7c7b', '#3759d7', '#b76a00'] },
-        textinfo: 'label+value',
-        textfont: { color: '#182230', size: 12 },
-    }], plotlyLayout(190), { responsive: true, displayModeBar: false });
+        marker: { colors: ['#247a76', '#5c6f86', '#ad6a00'] },
+        textinfo: 'none',
+        hoverinfo: 'label+value+percent',
+        sort: false,
+    }], {
+        ...plotlyLayout(250),
+        showlegend: false,
+        margin: { l: 8, r: 8, t: 4, b: 4 },
+    }, { responsive: true, displayModeBar: false });
 
     const cols = profile.columns;
     document.getElementById('columns-table-card').innerHTML = `

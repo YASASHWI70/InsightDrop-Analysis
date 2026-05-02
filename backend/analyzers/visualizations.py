@@ -34,7 +34,7 @@ class VisualizationGenerator:
                 "id": f"hist_{col}", "type": "histogram",
                 "title": f"Distribution of {col}",
                 "data": [{"x": [self._s(v) for v in s.tolist()], "type": "histogram",
-                          "marker": {"color": "rgba(14, 124, 123, 0.72)"}, "name": col}],
+                          "marker": {"color": "rgba(36, 122, 118, 0.72)"}, "name": col}],
                 "layout": {"xaxis": {"title": col}, "yaxis": {"title": "Count"}},
             })
         return charts
@@ -44,7 +44,7 @@ class VisualizationGenerator:
             return []
         cols = list(self.numeric_df.columns[:8])
         data = []
-        colors = ["#0e7c7b", "#3759d7", "#b76a00", "#7047b8", "#16855c", "#c93434", "#435063", "#748094"]
+        colors = ["#247a76", "#5c6f86", "#ad6a00", "#7047b8", "#16855c", "#c93434", "#435063", "#748094"]
         for i, col in enumerate(cols):
             s = self.numeric_df[col].dropna()
             data.append({"y": [self._s(v) for v in s.tolist()], "type": "box",
@@ -61,7 +61,7 @@ class VisualizationGenerator:
                 "title": f"Top Values - {col}",
                 "data": [{"x": [str(v) for v in vc.index.tolist()],
                           "y": [int(v) for v in vc.values.tolist()],
-                          "type": "bar", "marker": {"color": "rgba(55, 89, 215, 0.78)"}}],
+                          "type": "bar", "marker": {"color": "rgba(92, 111, 134, 0.78)"}}],
                 "layout": {"xaxis": {"title": col}, "yaxis": {"title": "Count"}},
             })
         return charts
@@ -97,7 +97,7 @@ class VisualizationGenerator:
                 "data": [{"x": [self._s(v) for v in s1.loc[idx].head(500).tolist()],
                           "y": [self._s(v) for v in s2.loc[idx].head(500).tolist()],
                           "mode": "markers", "type": "scatter",
-                          "marker": {"color": "rgba(14,124,123,0.55)", "size": 6}}],
+                          "marker": {"color": "rgba(36,122,118,0.55)", "size": 6}}],
                 "layout": {"xaxis": {"title": c1}, "yaxis": {"title": c2}},
             })
         return charts
@@ -122,7 +122,7 @@ class VisualizationGenerator:
             "id": "dtypes", "type": "pie", "title": "Data Types Distribution",
             "data": [{"values": [int(v) for v in counts.values.tolist()],
                       "labels": list(counts.index), "type": "pie",
-                      "marker": {"colors": ["#0e7c7b", "#3759d7", "#b76a00", "#7047b8", "#16855c"]}}],
+                      "marker": {"colors": ["#247a76", "#5c6f86", "#ad6a00", "#7047b8", "#16855c"]}}],
             "layout": {},
         }
 
