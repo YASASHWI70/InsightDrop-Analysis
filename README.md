@@ -53,8 +53,16 @@ source .venv/bin/activate
 Install dependencies from the root:
 
 ```bash
+python -m pip install -r requirements.txt
+```
+
+If needed, you can also install directly from the backend requirements file:
+
+```bash
 python -m pip install -r backend/requirements.txt
 ```
+
+> Troubleshooting: If the upload endpoint fails with a missing `python-multipart` error, install it using the command above.
 
 ## Run From The Project Root
 
