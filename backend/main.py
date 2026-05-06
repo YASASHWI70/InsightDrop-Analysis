@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -20,6 +20,7 @@ try:
         CorrelationAnalyzer,
         OutlierDetector,
         VisualizationGenerator,
+        TargetAnalyzer,
     )
 except ImportError:
     from analyzers import (
@@ -28,6 +29,7 @@ except ImportError:
         CorrelationAnalyzer,
         OutlierDetector,
         VisualizationGenerator,
+        TargetAnalyzer,
     )
 
 app = FastAPI(title="InsightDrop", version="1.0.0")
@@ -156,6 +158,16 @@ async def outliers_only(dataset_id: str):
 async def visualizations_only(dataset_id: str):
     df = _load_dataset(dataset_id)
     return VisualizationGenerator(df).generate()
+
+
+@app.get("/api/target/{dataset_id}")
+async def target_analysis(dataset_id: str, target_col: str = Query(..., description="Column name to use as target variable")):
+    """Analyze a specific column as the target variable."""
+    df = _load_dataset(dataset_id)
+    result = TargetAnalyzer(df, target_col).analyze()
+    if "error" in result:
+        raise HTTPException(400, result["error"])
+    return result
 
 
 def _load_dataset(dataset_id: str) -> pd.DataFrame:

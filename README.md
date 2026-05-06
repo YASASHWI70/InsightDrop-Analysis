@@ -13,6 +13,7 @@ InsightDrop is a FastAPI web app for quick exploratory data analysis. Upload a C
 - Correlation analysis with heatmaps and ranked relationships.
 - IQR-based outlier detection.
 - Plotly-powered charts for distributions, categories, missing values, and data types.
+- **Target Variable Analysis** — select any column as the target to get automatic ML problem-type detection, algorithm recommendations, Pearson correlations or group-means breakdown, and a distribution chart.
 - Redesigned frontend workbench served directly by FastAPI.
 
 ## Technology Stack
@@ -53,16 +54,8 @@ source .venv/bin/activate
 Install dependencies from the root:
 
 ```bash
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
-
-If needed, you can also install directly from the backend requirements file:
-
-```bash
-python -m pip install -r backend/requirements.txt
-```
-
-> Troubleshooting: If the upload endpoint fails with a missing `python-multipart` error, install it using the command above.
 
 ## Run From The Project Root
 
@@ -81,7 +74,7 @@ http://localhost:8000
 You can also run the FastAPI app directly from the root:
 
 ```bash
-python -m uvicorn backend.main:app --reload
+uvicorn backend.main:app --reload
 ```
 
 ## Sample Data
@@ -91,7 +84,7 @@ A `sample_employees.csv` file is included in the project root. Upload it through
 ## Project Structure
 
 ```text
-auto-data/
+InsightDrop-Analysis/
 |-- main.py                    # Root launcher for the FastAPI app
 |-- README.md
 |-- sample_employees.csv
@@ -106,7 +99,8 @@ auto-data/
 |       |-- statistics.py
 |       |-- correlations.py
 |       |-- outliers.py
-|       `-- visualizations.py
+|       |-- visualizations.py
+|       `-- target.py          # Target variable analysis
 `-- frontend/
     |-- index.html
     |-- css/
@@ -124,6 +118,7 @@ auto-data/
 - `GET /api/correlations/{dataset_id}`
 - `GET /api/outliers/{dataset_id}`
 - `GET /api/visualizations/{dataset_id}`
+- `GET /api/target/{dataset_id}?target_col={column_name}`
 
 ## License
 

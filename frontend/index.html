@@ -3,139 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightDrop - Dataset Analysis</title>
-    <meta name="description" content="Upload a CSV or Excel file and review automated dataset profiling, statistics, correlations, outliers, and charts.">
+    <title>InsightDrop — Dataset Analysis</title>
+    <meta name="description" content="Upload a CSV or Excel file and get instant automated dataset profiling, statistics, correlations, outliers, and charts.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header id="app-header">
-        <div class="header-content">
-            <div class="brand">
-                <span class="logo-icon" aria-hidden="true"></span>
-                <div>
-                    <h1>InsightDrop</h1>
-                    <p class="tagline">Dataset analysis Workbench</p>
-                </div>
+
+<!-- ══════════════════════════ UPLOAD SCREEN ══════════════════════════════ -->
+<div id="upload-screen" class="screen active">
+    <div class="upload-bg-glow" aria-hidden="true"></div>
+
+    <header class="upload-header">
+        <div class="brand">
+            <div class="logo-mark" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+                    <path d="M11 2L20 7V15L11 20L2 15V7L11 2Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M11 2V20M2 7L20 15M20 7L2 15" stroke="#fff" stroke-width="1.2" stroke-opacity="0.55"/>
+                </svg>
             </div>
-            <div class="header-status" aria-label="Backend status">
-                <span class="status-dot" aria-hidden="true"></span>
-                <span>Local FastAPI</span>
-            </div>
+            <span class="brand-name">InsightDrop</span>
+        </div>
+        <div class="upload-header-status">
+            <span class="status-pulse" aria-hidden="true"></span>
+            <span>FastAPI ready</span>
         </div>
     </header>
 
-    <main id="app-main">
-        <section id="upload-section" class="section visible">
-            <div class="upload-layout">
-                <div class="upload-panel">
-                    <p class="eyebrow">File intake</p>
-                    <h2>Upload dataset</h2>
-                    <p class="upload-note">CSV, XLSX, or XLS</p>
-
-                    <div id="drop-zone" class="drop-zone">
-                        <div class="drop-zone-content">
-                            <div class="upload-symbol" aria-hidden="true">
-                                <span></span>
-                            </div>
-                            <h3>Drop file here</h3>
-                            <p>or browse from your device</p>
-                            <input type="file" id="file-input" accept=".csv,.xlsx,.xls" hidden>
-                            <button id="browse-btn" class="btn btn-primary" type="button">
-                                <span>Browse files</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="upload-progress" class="upload-progress hidden">
-                        <div class="progress-bar"><div class="progress-fill"></div></div>
-                        <p class="progress-text">Uploading and analyzing...</p>
-                    </div>
-                </div>
-
-                <div class="sample-panel">
-                    <p class="eyebrow">Included sample</p>
-                    <h2>sample_employees.csv</h2>
-                    <p>Use the sample file in the project root to quickly verify the full analysis flow.</p>
-                    <div class="sample-stats" aria-label="Analysis sections">
-                        <span>Profile</span>
-                        <span>Stats</span>
-                        <span>Outliers</span>
-                        <span>Charts</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="results-section" class="section hidden">
-            <div id="file-info-bar" class="file-info-bar">
-                <div class="file-info-left">
-                    <span class="file-icon" aria-hidden="true"></span>
-                    <div>
-                        <span id="file-name" class="file-name">dataset.csv</span>
-                        <span id="file-meta" class="file-meta">rows x columns</span>
-                    </div>
-                </div>
-                <button id="new-upload-btn" class="btn btn-outline btn-sm" type="button">Upload new file</button>
-            </div>
-
-            <nav id="tab-nav" class="tab-nav" aria-label="Analysis sections">
-                <button class="tab active" data-tab="overview" type="button">Overview</button>
-                <button class="tab" data-tab="statistics" type="button">Statistics</button>
-                <button class="tab" data-tab="correlations" type="button">Correlations</button>
-                <button class="tab" data-tab="outliers" type="button">Outliers</button>
-                <button class="tab" data-tab="visualizations" type="button">Charts</button>
-                <button class="tab" data-tab="data-preview" type="button">Data</button>
-            </nav>
-
-            <div id="tab-panels" class="tab-panels">
-                <div id="panel-overview" class="panel active">
-                    <div class="grid grid-4" id="overview-cards"></div>
-                    <div class="grid grid-2 mt-2">
-                        <div class="card" id="quality-card"></div>
-                        <div class="card" id="column-types-card"></div>
-                    </div>
-                    <div class="card mt-2" id="columns-table-card"></div>
-                </div>
-
-                <div id="panel-statistics" class="panel">
-                    <div id="stats-overall" class="grid grid-3 mb-2"></div>
-                    <div class="card" id="stats-table-card"></div>
-                </div>
-
-                <div id="panel-correlations" class="panel">
-                    <div class="card" id="corr-heatmap-card"></div>
-                    <div class="grid grid-2 mt-2">
-                        <div class="card" id="corr-strong-card"></div>
-                        <div class="card" id="corr-top-card"></div>
-                    </div>
-                </div>
-
-                <div id="panel-outliers" class="panel">
-                    <div class="grid grid-3" id="outlier-summary-cards"></div>
-                    <div class="card mt-2" id="outlier-table-card"></div>
-                </div>
-
-                <div id="panel-visualizations" class="panel">
-                    <div id="charts-container" class="charts-grid"></div>
-                </div>
-
-                <div id="panel-data-preview" class="panel">
-                    <div class="card" id="data-table-card"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <div id="loading-overlay" class="loading-overlay hidden">
-        <div class="loader">
-            <div class="loader-ring"></div>
-            <p>Analyzing your dataset...</p>
+    <main class="upload-main">
+        <div class="upload-hero">
+            <p class="upload-eyebrow">Automated Exploratory Data Analysis</p>
+            <h1 class="upload-title">Drop your dataset.<br>Get instant insights.</h1>
+            <p class="upload-sub">Upload a CSV, XLSX, or XLS file and get a full analysis — profiling, statistics, correlations, outliers, visualizations, and ML target recommendations — all in one dashboard.</p>
         </div>
-    </div>
 
-    <script src="/static/js/app.js"></script>
+        <div class="upload-card" id="drop-zone">
+            <div class="upload-card-inner">
+                <div class="upload-icon-wrap" aria-hidden="true">
+                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                        <rect width="44" height="44" rx="12" fill="url(#ug)"/>
+                        <path d="M22 28V16M16 22l6-6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 31h16" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="ug" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#6366f1"/>
+                                <stop offset="1" stop-color="#0ea5e9"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h2 class="upload-card-title">Drag &amp; drop your file here</h2>
+                <p class="upload-card-sub">or click to browse from your device</p>
+                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" hidden>
+                <button id="browse-btn" class="btn btn-upload" type="button">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2M8 3v7M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Choose file
+                </button>
+            </div>
+            <div class="upload-formats" aria-label="Supported formats">
+                <span>.csv</span><span>.xlsx</span><span>.xls</span>
+            </div>
+        </div>
+
+        <div id="upload-progress" class="upload-progress hidden">
+            <div class="progress-track"><div class="progress-bar-fill"></div></div>
+            <p class="progress-label" id="progress-label">Uploading…</p>
+        </div>
+
+        <div class="upload-feature-row">
+            <div class="feature-pill">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 4.5V7l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                Instant results
+            </div>
+            <div class="feature-pill">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 7h4M7 5v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                7 analysis sections
+            </div>
+            <div class="feature-pill">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 10l3-3 2 2 3-4 2 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Interactive charts
+            </div>
+            <div class="feature-pill">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="0.8" fill="currentColor"/></svg>
+                ML recommendations
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ══════════════════════════ DASHBOARD SCREEN ═══════════════════════════ -->
+<div id="dashboard-screen" class="screen hidden">
+
+    <!-- Left Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-brand">
+                <div class="logo-mark sm" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 22 22" fill="none">
+                        <path d="M11 2L20 7V15L11 20L2 15V7L11 2Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M11 2V20M2 7L20 15M20 7L2 15" stroke="#fff" stroke-width="1.4" stroke-opacity="0.55"/>
+                    </svg>
+                </div>
+                <span class="sidebar-brand-name">InsightDrop</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebar-nav" aria-label="Analysis sections">
+            <button class="nav-item active" data-tab="overview" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+                <span>Overview</span>
+            </button>
+            <button class="nav-item" data-tab="statistics" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 17V10M7 17V6M11 17V9M15 17V4M19 17H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <span>Statistics</span>
+            </button>
+            <button class="nav-item" data-tab="correlations" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 17L8 11l4 3 5-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="3" cy="17" r="1.5" fill="currentColor"/><circle cx="8" cy="11" r="1.5" fill="currentColor"/><circle cx="12" cy="14" r="1.5" fill="currentColor"/><circle cx="17" cy="6" r="1.5" fill="currentColor"/></svg>
+                <span>Correlations</span>
+            </button>
+            <button class="nav-item" data-tab="outliers" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3L18 17H2L10 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 8v4M10 14.5v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>Outliers</span>
+            </button>
+            <button class="nav-item" data-tab="visualizations" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 15l5-5 4 3 4-6 3 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/></svg>
+                <span>Charts</span>
+            </button>
+            <button class="nav-item" data-tab="target" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></svg>
+                <span>Target</span>
+            </button>
+            <button class="nav-item" data-tab="data-preview" type="button">
+                <svg class="nav-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2" y="4" width="16" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M2 8h16M7 8v9" stroke="currentColor" stroke-width="1.4"/></svg>
+                <span>Data</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button id="new-upload-btn" class="btn-new-upload" type="button">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                New file
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main dashboard body -->
+    <div class="dashboard-body">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" type="button">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-file">
+                <div class="topbar-file-icon" aria-hidden="true">
+                    <svg width="13" height="15" viewBox="0 0 14 16" fill="none"><path d="M2 1h7l3 3v11H2V1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 1v3h3" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M4 7h6M4 10h6M4 13h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                    <span id="file-name" class="topbar-file-name">dataset.csv</span>
+                    <span id="file-meta" class="topbar-file-meta">0 rows × 0 cols</span>
+                </div>
+            </div>
+            <div class="topbar-summary" id="topbar-summary">
+                <div class="summary-chip">
+                    <span class="summary-chip-label">Rows</span>
+                    <span class="summary-chip-val" id="sum-rows">—</span>
+                </div>
+                <div class="summary-chip">
+                    <span class="summary-chip-label">Cols</span>
+                    <span class="summary-chip-val" id="sum-cols">—</span>
+                </div>
+                <div class="summary-chip">
+                    <span class="summary-chip-label">Missing</span>
+                    <span class="summary-chip-val" id="sum-missing">—</span>
+                </div>
+                <div class="summary-chip">
+                    <span class="summary-chip-label">Quality</span>
+                    <span class="summary-chip-val" id="sum-quality">—</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Panels -->
+        <div class="panels-wrap">
+
+            <div id="panel-overview" class="panel active">
+                <div class="panel-header">
+                    <h2 class="panel-title">Overview</h2>
+                    <p class="panel-desc">High-level dataset profile, quality score, and column breakdown.</p>
+                </div>
+                <div class="kpi-row" id="overview-cards"></div>
+                <div class="grid grid-2 mt-lg">
+                    <div class="card" id="quality-card"></div>
+                    <div class="card" id="column-types-card"></div>
+                </div>
+                <div class="card mt-lg" id="columns-table-card"></div>
+            </div>
+
+            <div id="panel-statistics" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Statistics</h2>
+                    <p class="panel-desc">Descriptive statistics for all numeric columns.</p>
+                </div>
+                <div class="kpi-row" id="stats-overall"></div>
+                <div class="card mt-lg" id="stats-table-card"></div>
+            </div>
+
+            <div id="panel-correlations" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Correlations</h2>
+                    <p class="panel-desc">Pearson correlation heatmap and strongest column relationships.</p>
+                </div>
+                <div class="card" id="corr-heatmap-card"></div>
+                <div class="grid grid-2 mt-lg">
+                    <div class="card" id="corr-strong-card"></div>
+                    <div class="card" id="corr-top-card"></div>
+                </div>
+            </div>
+
+            <div id="panel-outliers" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Outliers</h2>
+                    <p class="panel-desc">IQR-based outlier detection across numeric columns.</p>
+                </div>
+                <div class="kpi-row" id="outlier-summary-cards"></div>
+                <div class="card mt-lg" id="outlier-table-card"></div>
+            </div>
+
+            <div id="panel-visualizations" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Charts</h2>
+                    <p class="panel-desc">Auto-generated Plotly charts — distributions, categories, and relationships.</p>
+                </div>
+                <div id="charts-container" class="charts-grid"></div>
+            </div>
+
+            <div id="panel-target" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Target Variable</h2>
+                    <p class="panel-desc">Select a column to get ML problem-type detection, algorithm recommendations, correlations, and distribution.</p>
+                </div>
+                <div class="card target-selector-card mb-lg">
+                    <label class="target-label" for="target-col-select">Choose target column</label>
+                    <div class="target-controls">
+                        <select id="target-col-select" class="target-select" aria-label="Select target column">
+                            <option value="">— select a column —</option>
+                        </select>
+                        <button id="target-run-btn" class="btn btn-analyze" type="button" disabled>
+                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Analyze
+                        </button>
+                    </div>
+                </div>
+                <div id="target-content"></div>
+            </div>
+
+            <div id="panel-data-preview" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Data Preview</h2>
+                    <p class="panel-desc">First 10 rows of the uploaded dataset.</p>
+                </div>
+                <div class="card" id="data-table-card"></div>
+            </div>
+
+        </div><!-- /panels-wrap -->
+    </div><!-- /dashboard-body -->
+</div><!-- /dashboard-screen -->
+
+<!-- Loading overlay -->
+<div id="loading-overlay" class="loading-overlay hidden" aria-live="polite">
+    <div class="loader-card">
+        <div class="loader-dots" aria-hidden="true">
+            <span></span><span></span><span></span>
+        </div>
+        <p class="loader-title">Analyzing your dataset</p>
+        <p class="loader-sub" id="loader-sub">Running full analysis pipeline…</p>
+    </div>
+</div>
+
+<script src="/static/js/app.js"></script>
 </body>
 </html>
