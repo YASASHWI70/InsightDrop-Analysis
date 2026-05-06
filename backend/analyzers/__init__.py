@@ -3,6 +3,7 @@ from .statistics import StatisticsAnalyzer
 from .correlations import CorrelationAnalyzer
 from .outliers import OutlierDetector
 from .visualizations import VisualizationGenerator
+from .target import TargetAnalyzer
 
 __all__ = [
     "DataProfiler",
@@ -10,4 +11,5 @@ __all__ = [
     "CorrelationAnalyzer",
     "OutlierDetector",
     "VisualizationGenerator",
+    "TargetAnalyzer",
 ]
