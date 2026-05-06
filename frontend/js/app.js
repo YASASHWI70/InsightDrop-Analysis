@@ -191,6 +191,9 @@ function renderOverview(profile) {
         </div>
         <div id="dtype-chart"></div>`;
 
+    const _dtTotal = (overview.numeric_columns + overview.categorical_columns + overview.datetime_columns) || 1;
+    const _dtPct = (n) => ((n / _dtTotal) * 100).toFixed(1);
+
     Plotly.newPlot('dtype-chart', [{
         values: [overview.numeric_columns, overview.categorical_columns, overview.datetime_columns],
         labels: ['Numeric', 'Categorical', 'Datetime'],
@@ -199,6 +202,25 @@ function renderOverview(profile) {
         textinfo: 'none', hoverinfo: 'label+value+percent', sort: false,
     }], { ...plotlyLayout(230), showlegend: false, margin: { l: 8, r: 8, t: 4, b: 4 } },
     { responsive: true, displayModeBar: false });
+
+    document.getElementById('dtype-chart').insertAdjacentHTML('afterend', `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.6rem;text-align:center;font-size:.78rem;">
+            <div style="background:#6366f120;border-radius:8px;padding:.4rem .2rem">
+                <div style="font-weight:700;color:#6366f1">${overview.numeric_columns}</div>
+                <div style="color:var(--muted)">Numeric</div>
+                <div style="font-weight:600;color:var(--text)">${_dtPct(overview.numeric_columns)}%</div>
+            </div>
+            <div style="background:#0ea5e920;border-radius:8px;padding:.4rem .2rem">
+                <div style="font-weight:700;color:#0ea5e9">${overview.categorical_columns}</div>
+                <div style="color:var(--muted)">Categorical</div>
+                <div style="font-weight:600;color:var(--text)">${_dtPct(overview.categorical_columns)}%</div>
+            </div>
+            <div style="background:#d9770620;border-radius:8px;padding:.4rem .2rem">
+                <div style="font-weight:700;color:#d97706">${overview.datetime_columns}</div>
+                <div style="color:var(--muted)">Datetime</div>
+                <div style="font-weight:600;color:var(--text)">${_dtPct(overview.datetime_columns)}%</div>
+            </div>
+        </div>`);
 
     document.getElementById('columns-table-card').innerHTML = `
         <p class="card-title">Column Details</p>
