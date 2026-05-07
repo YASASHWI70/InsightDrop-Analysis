@@ -108,7 +108,7 @@ class TargetAnalyzer:
         if isinstance(val, (np.integer,)):
             return int(val)
         if isinstance(val, (np.floating,)):
-            return float(val)
+            return round(float(val), 4)
         return val
 
     def _stat_cards(self, tc, sem_type, is_num, n_valid, n_missing, miss_pct, n_unique) -> list[dict]:
