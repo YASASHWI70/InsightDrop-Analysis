@@ -90,8 +90,8 @@ button { color: inherit; cursor: pointer; }
     padding: 1.1rem 2rem;
     border-bottom: 1px solid rgba(255,255,255,.6);
     background: rgba(255,255,255,.55);
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
 }
 
 .brand { display: flex; align-items: center; gap: .6rem; }
@@ -175,8 +175,8 @@ button { color: inherit; cursor: pointer; }
 .upload-card {
     width: min(520px, 100%);
     background: rgba(255,255,255,.85);
-    backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
     border: 1.5px dashed var(--line-strong);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
@@ -282,6 +282,7 @@ button { color: inherit; cursor: pointer; }
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: .38rem .85rem;
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
 }
 
@@ -816,8 +817,8 @@ button { color: inherit; cursor: pointer; }
     position: fixed; inset: 0; z-index: 1000;
     display: flex; align-items: center; justify-content: center;
     background: rgba(240,242,248,.7);
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
 }
 .loading-overlay.hidden { display: none; }
 
