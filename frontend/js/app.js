@@ -125,7 +125,7 @@ function renderDashboard(data) {
 
     // topbar
     document.getElementById('file-name').textContent = data.filename;
-    document.getElementById('file-meta').textContent = `${fmt(ov.rows)} rows Ã— ${ov.columns} cols`;
+    document.getElementById('file-meta').textContent = `${fmt(ov.rows)} rows × ${ov.columns} cols`;
 
     // summary chips
     document.getElementById('sum-rows').textContent    = fmt(ov.rows);
@@ -258,7 +258,7 @@ function renderStatistics(stats) {
             <thead><tr>${fields.map((f) => `<th>${escapeHtml(f.replace('_',' '))}</th>`).join('')}</tr></thead>
             <tbody>${stats.summary.map((s) => `<tr>${fields.map((f) => {
                 let v = s[f];
-                if (typeof v === 'number' && f !== 'count') v = v.toLocaleString(undefined, { maximumFractionDigits: 4 });
+                if (typeof v === 'number' && f !== 'count') v = v.toFixed(4);
                 if (f === 'column') return `<td style="font-weight:800;color:var(--ink)">${escapeHtml(v)}</td>`;
                 if (f === 'distribution_shape') return `<td><span class="badge badge-info">${escapeHtml(v)}</span></td>`;
                 return `<td>${formatValue(v)}</td>`;
@@ -286,10 +286,10 @@ function renderCorrelations(corr) {
     { responsive: true, displayModeBar: false });
 
     document.getElementById('corr-strong-card').innerHTML = `
-        <p class="card-title">Strong Correlations (|r| â‰¥ 0.5)</p>
+        <p class="card-title">Strong Correlations (|r| ≥ 0.5)</p>
         ${(corr.strong_pairs||[]).length === 0 ? '<div class="info-message">No strong correlations found.</div>' :
         (corr.strong_pairs||[]).slice(0,10).map((p) => `<div class="pair-item">
-            <span class="pair-cols">${escapeHtml(p.column_1)} â†” ${escapeHtml(p.column_2)}</span>
+            <span class="pair-cols">${escapeHtml(p.column_1)} ↔ ${escapeHtml(p.column_2)}</span>
             <span class="pair-val" style="color:${p.correlation>0?'var(--success)':'var(--danger)'}">${p.correlation.toFixed(4)}</span>
         </div>`).join('')}`;
 
@@ -297,7 +297,7 @@ function renderCorrelations(corr) {
         <p class="card-title">Top Positive Correlations</p>
         ${(corr.top_positive||[]).length === 0 ? '<div class="info-message">None found.</div>' :
         (corr.top_positive||[]).map((p) => `<div class="pair-item">
-            <span class="pair-cols">${escapeHtml(p.column_1)} â†” ${escapeHtml(p.column_2)}</span>
+            <span class="pair-cols">${escapeHtml(p.column_1)} ↔ ${escapeHtml(p.column_2)}</span>
             <span class="pair-val" style="color:var(--success)">${p.correlation.toFixed(4)}</span>
         </div>`).join('')}`;
 }
@@ -373,7 +373,7 @@ function metricCard(title, value, sub) {
 function initTargetSelector(columns) {
     const select = document.getElementById('target-col-select');
     const btn    = document.getElementById('target-run-btn');
-    select.innerHTML = '<option value="">â€” select a column â€”</option>';
+    select.innerHTML = '<option value="">– select a column –</option>';
     columns.forEach((col) => {
         const opt = document.createElement('option');
         opt.value = col.name; opt.textContent = col.name;
@@ -407,12 +407,16 @@ function renderTarget(data) {
 
     const statCardsHtml = `
         <div class="kpi-row mb-lg">
-            ${data.stat_cards.map((c) => `
+            ${data.stat_cards.map((c) => {
+                let displayVal = c.value ?? 'â€"';
+                if (typeof c.value === 'number') displayVal = c.value.toFixed(4);
+                return `
                 <div class="metric-card">
                     <p class="card-title">${escapeHtml(c.label)}</p>
-                    <p class="card-value">${escapeHtml(String(c.value ?? 'â€”'))}</p>
+                    <p class="card-value">${escapeHtml(String(displayVal))}</p>
                     ${c.sub ? `<p class="card-sub">${escapeHtml(c.sub)}</p>` : ''}
-                </div>`).join('')}
+                </div>`;
+            }).join('')}
         </div>`;
 
     const noteHtml = pt.note ? `<div class="target-note">${escapeHtml(pt.note)}</div>` : '';
@@ -534,7 +538,7 @@ function fmt(value) { return Number(value || 0).toLocaleString(); }
 
 function formatValue(value) {
     if (value === null || value === undefined || value === '') return '<em style="color:var(--muted)">null</em>';
-    if (typeof value === 'number') return escapeHtml(value.toLocaleString(undefined, { maximumFractionDigits: 4 }));
+    if (typeof value === 'number') return escapeHtml(value.toFixed(4));
     return escapeHtml(value);
 }
 
