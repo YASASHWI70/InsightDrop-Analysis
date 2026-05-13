@@ -81,6 +81,17 @@ uvicorn backend.main:app --reload
 
 A `sample_employees.csv` file is included in the project root. Upload it through the web interface to verify the analysis flow.
 
+## Screenshots
+
+### Main Interface
+![Main Interface](images/main.png)
+
+### Dashboard
+![Dashboard](images/dashboard.png)
+
+### Statistics
+![Statistics](images/statistics.png)
+
 ## Project Structure
 
 ```text
